@@ -16,8 +16,9 @@ logging.basicConfig(level=logging.INFO)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
+    # Using 'gemini-pro' for maximum compatibility
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-pro",
         system_instruction="""You are a highly reliable and factual Travel Companion Chatbot.
 Your primary goal is to provide accurate recommendations for restaurants, events, and travel tips ANYWHERE in the world.
 
@@ -52,11 +53,6 @@ def search_world_data(query: str) -> str:
         logging.error(f"Search error: {e}")
         return {"status": "error", "message": "The search service is temporarily unavailable."}
 
-# Map tools
-tools = {
-    "search_world_data": search_world_data
-}
-
 # Store chat sessions
 chat_sessions = {}
 
@@ -77,18 +73,14 @@ def chat():
         return jsonify({"error": "Message is required"}), 400
 
     if session_id not in chat_sessions:
+        # Note: gemini-pro (1.0) handles tools slightly differently in the old SDK
+        # We will use the standard chat for now
         chat_sessions[session_id] = model.start_chat(history=[], enable_automatic_function_calling=True)
 
     chat_session = chat_sessions[session_id]
 
     try:
-        # We need to wrap the tool in a way the SDK understands
-        # But wait, standard GenerativeModel supports tools passing
-        # Let's recreate the model with tools for this session
-        
-        # Simplified approach for this SDK:
         response = chat_session.send_message(user_message, tools=[search_world_data])
-        
         return jsonify({"response": response.text})
 
     except Exception as e:
