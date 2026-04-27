@@ -56,7 +56,7 @@ def search_world_data(query: str) -> list:
         logging.error(f"Search error: {e}")
         return []
 
-SYSTEM_PROMPT = """You are a highly reliable and factual Travel Companion Chatbot.
+SYSTEM_PROMPT = """You are a highly reliable and factual Travel Companion Chatbot named Tripster.
 Your primary goal is to provide accurate recommendations for restaurants, events, and travel tips ANYWHERE in the world.
 
 RULES:
