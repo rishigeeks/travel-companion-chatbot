@@ -78,7 +78,7 @@ def chat():
 
     if session_id not in chat_sessions:
         chat_sessions[session_id] = client.chats.create(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash",
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 tools=tools_list,
