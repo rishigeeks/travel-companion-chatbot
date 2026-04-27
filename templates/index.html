@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust - AI Travel Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-plane-departure"></i>
+                <span>Wanderlust</span>
+            </div>
+            <div class="features-list">
+                <h3>Capabilities</h3>
+                <ul>
+                    <li><i class="fa-solid fa-utensils"></i> Restaurants</li>
+                    <li><i class="fa-solid fa-ticket"></i> Events</li>
+                    <li><i class="fa-solid fa-book-open"></i> Travel Tips</li>
+                </ul>
+            </div>
+            <div class="anti-hallucination-badge">
+                <i class="fa-solid fa-shield-halved"></i>
+                <p>100% Factual.<br>Zero Hallucinations.</p>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <header class="chat-header">
+                <h2>Your Travel Companion</h2>
+                <p>Ask me for factual recommendations in New York, Tokyo, London, or Paris.</p>
+            </header>
+            
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="message bot-message">
+                    <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="message-content">
+                        Hello! I'm Wanderlust. I have direct access to live data for restaurants, events, and travel tips. I will never guess or hallucinate an answer. How can I help you plan your trip today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chatForm">
+                    <input type="text" id="userInput" placeholder="e.g., Find me Italian restaurants in New York..." autocomplete="off" required>
+                    <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
