@@ -23,10 +23,17 @@ else:
 # --- Real-World Search Tools ---
 def search_world_data(query: str) -> list:
     """Searches the live web for factual information."""
-    logging.info(f"WEB SEARCH CALL: {query}")
+    # Clean up conversational queries for better search results
+    clean_query = query.lower().replace("suggest me", "").replace("find me", "").replace("tell me about", "").strip()
+    if "cafes" in clean_query or "restaurants" in clean_query:
+        search_term = f"best {clean_query}"
+    else:
+        search_term = clean_query
+        
+    logging.info(f"WEB SEARCH CALL: {search_term}")
     try:
         with DDGS() as ddgs:
-            results = [r for r in ddgs.text(query, max_results=5)]
+            results = [r for r in ddgs.text(search_term, max_results=5)]
             return results
     except Exception as e:
         logging.error(f"Search error: {e}")
