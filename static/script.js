@@ -56,7 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
-        contentDiv.textContent = text;
+        
+        if (role === 'bot') {
+            contentDiv.innerHTML = marked.parse(text);
+        } else {
+            contentDiv.textContent = text;
+        }
 
         messageDiv.appendChild(avatarDiv);
         messageDiv.appendChild(contentDiv);

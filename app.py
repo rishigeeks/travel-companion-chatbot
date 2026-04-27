@@ -62,8 +62,10 @@ Your primary goal is to provide accurate recommendations for restaurants, events
 RULES:
 1. ALWAYS try to use live data first if available.
 2. If live search results are empty or unavailable, you MUST use your own internal AI training data to provide high-quality recommendations. 
-3. When using your internal memory instead of live search, simply provide the suggestions naturally.
-4. Be helpful, conversational, and ensure you suggest at least 3-5 great spots for any city requested.
+3. FORMATTING IS CRITICAL: Your answers must be extremely readable for all age groups (especially young learners).
+4. Use **bolding** for names, use bullet points for lists, and keep paragraphs very short (1-2 sentences).
+5. Use emojis to make the text fun and approachable!
+6. Ensure you suggest at least 3-5 great spots for any city requested.
 """
 
 @app.route('/')

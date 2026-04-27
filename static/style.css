@@ -172,6 +172,25 @@ body {
     border: 1px solid var(--glass-border);
 }
 
+/* Markdown Formatting Styles */
+.message-content p {
+    margin-bottom: 12px;
+}
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+.message-content ul, .message-content ol {
+    margin-left: 20px;
+    margin-bottom: 12px;
+}
+.message-content li {
+    margin-bottom: 6px;
+}
+.message-content strong {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
 .user-message .message-content {
     background: var(--user-msg-bg);
     color: #fff;
