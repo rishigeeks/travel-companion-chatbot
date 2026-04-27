@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from flask import Flask, render_template, request, jsonify
-import google.generativeai as genai
+from groq import Groq
 from duckduckgo_search import DDGS
 from dotenv import load_dotenv
 
@@ -12,49 +12,36 @@ load_dotenv()
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Initialize Gemini Client
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
-    # Using 'gemini-pro' for maximum compatibility
-    model = genai.GenerativeModel(
-        model_name="gemini-pro",
-        system_instruction="""You are a highly reliable and factual Travel Companion Chatbot.
-Your primary goal is to provide accurate recommendations for restaurants, events, and travel tips ANYWHERE in the world.
-
-CRITICAL RULES (ANTI-HALLUCINATION):
-1. You MUST NEVER guess, make up, or hallucinate any restaurants, events, or specific travel facts.
-2. You MUST ALWAYS use the 'search_world_data' tool to gather live information from the web before answering.
-3. If the tool returns "no_results" or empty data, you MUST honestly tell the user that you couldn't find any information for that query. Do NOT invent a place.
-4. Base your final response ONLY on the data returned by the search tool.
-5. When providing results, summarize them clearly and mention that these are live search results.
-6. Be conversational, polite, and helpful, but remain strictly factual.
-"""
-    )
+# Initialize Groq Client
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+if GROQ_API_KEY:
+    client = Groq(api_key=GROQ_API_KEY)
 else:
-    model = None
-    logging.warning("GEMINI_API_KEY not found in environment variables. Application will not function fully.")
+    client = None
+    logging.warning("GROQ_API_KEY not found in environment variables.")
 
 # --- Real-World Search Tools ---
-def search_world_data(query: str) -> str:
-    """Searches the live web for factual information about restaurants, events, or travel tips.
-    
-    Args:
-        query: A specific search query (e.g., 'best restaurants in Manali', 'upcoming events in London').
-    """
+def search_world_data(query: str) -> list:
+    """Searches the live web for factual information."""
     logging.info(f"WEB SEARCH CALL: {query}")
     try:
         with DDGS() as ddgs:
             results = [r for r in ddgs.text(query, max_results=5)]
-            if not results:
-                return {"status": "no_results", "message": f"Could not find any live data for '{query}'."}
-            return {"status": "success", "results": results}
+            return results
     except Exception as e:
         logging.error(f"Search error: {e}")
-        return {"status": "error", "message": "The search service is temporarily unavailable."}
+        return []
 
-# Store chat sessions
-chat_sessions = {}
+SYSTEM_PROMPT = """You are a highly reliable and factual Travel Companion Chatbot.
+Your primary goal is to provide accurate recommendations for restaurants, events, and travel tips ANYWHERE in the world.
+
+CRITICAL RULES (ANTI-HALLUCINATION):
+1. You MUST NEVER guess, make up, or hallucinate any restaurants, events, or specific travel facts.
+2. ALWAYS base your final response ONLY on real-world facts. 
+3. If the user asks for a recommendation, I will provide you with search results. Use ONLY those results.
+4. If no results are found, honestly tell the user you couldn't find information for that query.
+5. Be conversational, but remain strictly factual.
+"""
 
 @app.route('/')
 def index():
@@ -62,26 +49,32 @@ def index():
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    if not model:
-        return jsonify({"error": "Gemini API key is not configured."}), 500
+    if not client:
+        return jsonify({"error": "GROQ_API_KEY not configured."}), 500
 
     data = request.json
     user_message = data.get('message')
-    session_id = data.get('session_id', 'default')
 
     if not user_message:
         return jsonify({"error": "Message is required"}), 400
 
-    if session_id not in chat_sessions:
-        # Note: gemini-pro (1.0) handles tools slightly differently in the old SDK
-        # We will use the standard chat for now
-        chat_sessions[session_id] = model.start_chat(history=[], enable_automatic_function_calling=True)
-
-    chat_session = chat_sessions[session_id]
-
     try:
-        response = chat_session.send_message(user_message, tools=[search_world_data])
-        return jsonify({"response": response.text})
+        # Step 1: Get search results first (Simple RAG approach for reliability)
+        search_results = search_world_data(user_message)
+        context = "Here are the search results for the user's query:\n" + json.dumps(search_results)
+        
+        # Step 2: Send to Groq
+        completion = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": context},
+                {"role": "user", "content": user_message}
+            ],
+            temperature=0.2
+        )
+        
+        return jsonify({"response": completion.choices[0].message.content})
 
     except Exception as e:
         logging.error(f"Error during chat: {e}")
