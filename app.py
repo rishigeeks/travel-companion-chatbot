@@ -3,6 +3,7 @@ import json
 import logging
 from flask import Flask, render_template, request, jsonify
 from google import genai
+from google.genai import types
 from duckduckgo_search import DDGS
 from dotenv import load_dotenv
 
