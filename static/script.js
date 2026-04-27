@@ -152,9 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentConversationId = null;
         chatMessages.innerHTML = `
             <div class="message bot-message">
-                <div class="avatar"><i class="fa-solid fa-robot"></i></div>
-                <div class="message-content">
-                    Hello! I'm Tripster. I have direct access to live data and my own travel knowledge to help you find restaurants, events, and tips anywhere. How can I help you today?
+                <div class="message-inner">
+                    <div class="avatar"><i class="fa-solid fa-plane"></i></div>
+                    <div class="message-content">
+                        Hello! I'm Tripster. I have direct access to live data and my own travel knowledge to help you find restaurants, events, and tips anywhere. How can I help you today?
+                    </div>
                 </div>
             </div>
         `;
@@ -204,9 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${role}-message`;
 
+        const innerDiv = document.createElement('div');
+        innerDiv.className = 'message-inner';
+
         const avatarDiv = document.createElement('div');
         avatarDiv.className = 'avatar';
-        avatarDiv.innerHTML = role === 'bot' ? '<i class="fa-solid fa-robot"></i>' : '<i class="fa-solid fa-user"></i>';
+        avatarDiv.innerHTML = role === 'bot' ? '<i class="fa-solid fa-plane"></i>' : '<i class="fa-solid fa-user"></i>';
 
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
@@ -217,25 +222,33 @@ document.addEventListener('DOMContentLoaded', () => {
             contentDiv.textContent = text;
         }
 
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(contentDiv);
+        innerDiv.appendChild(avatarDiv);
+        innerDiv.appendChild(contentDiv);
+        messageDiv.appendChild(innerDiv);
+        
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
     function showTypingIndicator() {
-        const indicatorDiv = document.createElement('div');
-        indicatorDiv.className = 'message bot-message';
-        indicatorDiv.innerHTML = `
-            <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        
+        const innerDiv = document.createElement('div');
+        innerDiv.className = 'message-inner';
+
+        innerDiv.innerHTML = `
+            <div class="avatar"><i class="fa-solid fa-plane"></i></div>
             <div class="typing-indicator" style="padding: 16px;">
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>
         `;
-        chatMessages.appendChild(indicatorDiv);
+        
+        messageDiv.appendChild(innerDiv);
+        chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
-        return indicatorDiv;
+        return messageDiv;
     }
 });
