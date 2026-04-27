@@ -4,3 +4,6 @@ requests
 groq
 gunicorn
 duckduckgo-search
+Flask-SQLAlchemy
+Flask-Login
+Flask-Bcrypt

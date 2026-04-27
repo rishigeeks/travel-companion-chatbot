@@ -17,13 +17,38 @@
                 <i class="fa-solid fa-plane-departure"></i>
                 <span>Tripster</span>
             </div>
-            <div class="features-list">
-                <h3>Capabilities</h3>
-                <ul>
-                    <li><i class="fa-solid fa-utensils"></i> Restaurants</li>
-                    <li><i class="fa-solid fa-ticket"></i> Events</li>
-                    <li><i class="fa-solid fa-book-open"></i> Travel Tips</li>
-                </ul>
+            
+            <div id="authSection" class="auth-section">
+                <!-- Logged Out View -->
+                <div id="loggedOutView">
+                    <button class="btn btn-outline" id="loginBtn">Log In</button>
+                    <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                    <div class="features-list mt-4">
+                        <h3>Capabilities</h3>
+                        <ul>
+                            <li><i class="fa-solid fa-utensils"></i> Restaurants</li>
+                            <li><i class="fa-solid fa-ticket"></i> Events</li>
+                            <li><i class="fa-solid fa-book-open"></i> Travel Tips</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Logged In View -->
+                <div id="loggedInView" style="display: none;">
+                    <div class="user-profile">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span id="usernameDisplay">User</span>
+                    </div>
+                    <button class="btn btn-new-chat" id="newChatBtn"><i class="fa-solid fa-plus"></i> New Trip</button>
+                    
+                    <div class="history-list mt-4">
+                        <h3>Past Trips</h3>
+                        <ul id="conversationList">
+                            <!-- History items will be injected here -->
+                        </ul>
+                    </div>
+                    <button class="btn btn-text mt-auto" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+                </div>
             </div>
         </aside>
 
@@ -51,6 +76,26 @@
                 </form>
             </div>
         </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="authModal" style="display: none;">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModal">&times;</button>
+            <h2 id="modalTitle">Welcome</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="authUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" required>
+                </div>
+                <div class="error-text" id="authError"></div>
+                <button type="submit" class="btn btn-primary full-width" id="authSubmitBtn">Submit</button>
+            </form>
+        </div>
     </div>
     
     <script src="{{ url_for('static', filename='script.js') }}"></script>
