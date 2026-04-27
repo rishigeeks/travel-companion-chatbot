@@ -65,7 +65,7 @@ def chat():
         
         # Step 2: Send to Groq
         completion = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="llama-3.1-70b-versatile",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "system", "content": context},
