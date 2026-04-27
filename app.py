@@ -21,15 +21,32 @@ else:
     logging.warning("GROQ_API_KEY not found in environment variables.")
 
 # --- Real-World Search Tools ---
+# --- Internal Knowledge Base (Failsafe) ---
+INTERNAL_KNOWLEDGE = {
+    "manali": [
+        {"name": "Johnson Cafe", "specialty": "Trout & Live Music", "vibe": "Rustic"},
+        {"name": "Cafe 1947", "specialty": "Italian & Riverside view", "vibe": "Vintage"},
+        {"name": "The Lazy Dog", "specialty": "Multi-cuisine", "vibe": "Relaxed riverside"}
+    ],
+    "delhi": [
+        {"name": "United Coffee House", "specialty": "Classic Indian & European", "vibe": "Royal/Heritage"},
+        {"name": "Diggin", "specialty": "Italian", "vibe": "Floral/Aesthetic"},
+        {"name": "Ama Cafe", "specialty": "Tibetan Breakfast & Desserts", "vibe": "Cozy/Majnu ka Tilla"}
+    ]
+}
+
 def search_world_data(query: str) -> list:
-    """Searches the live web for factual information."""
-    # Clean up conversational queries for better search results
+    """Searches the live web for factual information with an internal failsafe."""
     clean_query = query.lower().replace("suggest me", "").replace("find me", "").replace("tell me about", "").strip()
-    if "cafes" in clean_query or "restaurants" in clean_query:
-        search_term = f"best {clean_query}"
-    else:
-        search_term = clean_query
-        
+    
+    # Check internal knowledge first
+    for city in INTERNAL_KNOWLEDGE:
+        if city in clean_query:
+            logging.info(f"INTERNAL KNOWLEDGE HIT: {city}")
+            return INTERNAL_KNOWLEDGE[city]
+            
+    # Fallback to web search
+    search_term = f"best {clean_query}" if ("cafes" in clean_query or "restaurants" in clean_query) else clean_query
     logging.info(f"WEB SEARCH CALL: {search_term}")
     try:
         with DDGS() as ddgs:
