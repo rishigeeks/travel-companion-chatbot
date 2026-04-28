@@ -1,12 +1,13 @@
 :root {
-    --bg-main: #ffffff;
-    --sidebar-bg: #f9f9f9;
-    --border-color: #e5e5e5;
-    --text-main: #0d0d0d;
-    --text-muted: #666666;
+    --bg-main: #343541;
+    --sidebar-bg: #202123;
+    --border-color: #4d4d4f;
+    --text-main: #ececec;
+    --text-muted: #8e8ea0;
     --accent-primary: #10a37f; /* ChatGPT-like Green */
     --accent-hover: #1a7f64;
-    --bot-bg: #f7f7f8;
+    --bot-bg: #444654;
+    --input-bg: #40414f;
 }
 
 * {
@@ -90,12 +91,12 @@ body {
 }
 
 .btn-new-chat {
-    background: #fff;
+    background: transparent;
     color: var(--text-main);
     justify-content: flex-start;
 }
 .btn-new-chat:hover {
-    background: #f1f1f1;
+    background: #2A2B32;
 }
 
 .btn-text {
@@ -147,7 +148,7 @@ body {
     text-overflow: ellipsis;
 }
 .history-item:hover, .history-item.active {
-    background: #e5e5e5;
+    background: #2A2B32;
 }
 
 .user-profile {
@@ -244,7 +245,7 @@ body {
     left: 0;
     right: 0;
     padding: 24px;
-    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 40%);
+    background: linear-gradient(180deg, rgba(52,53,65,0) 0%, rgba(52,53,65,1) 40%);
 }
 
 #chatForm {
@@ -252,10 +253,10 @@ body {
     margin: 0 auto;
     position: relative;
     display: flex;
-    background: #fff;
+    background: var(--input-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 #userInput {
@@ -266,6 +267,7 @@ body {
     font-size: 16px;
     outline: none;
     background: transparent;
+    color: var(--text-main);
 }
 
 #chatForm button {
@@ -298,12 +300,12 @@ body {
 }
 
 .modal-content {
-    background: #fff;
+    background: var(--bg-main);
     padding: 32px;
     border-radius: 12px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     position: relative;
 }
 
@@ -319,6 +321,6 @@ body {
 }
 .form-group { margin-bottom: 16px; }
 .form-group label { display: block; margin-bottom: 8px; font-weight: 500;}
-.form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; outline: none; }
+.form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; outline: none; background: transparent; color: var(--text-main); }
 .form-group input:focus { border-color: var(--accent-primary); }
 .error-text { color: #e74c3c; font-size: 13px; text-align: center; min-height: 20px; margin-bottom: 16px;}
